@@ -14,6 +14,7 @@ using System.IO;
 using Path = System.IO.Path;
 using System.Security.Principal;
 using Microsoft.Win32;
+// 删除了错误的 using 语句
 
 namespace EdgeGUI;
 
@@ -24,12 +25,32 @@ public partial class MainWindow : Window
 {
     private Process? currentProcess;
     private const string SettingsFileName = "settings.json";
-    private string edgeExePath = "edge.exe"; // 新增：存储 edge.exe 的路径
+    private string? edgeExePath; // 修改为可空字符串
 
     public MainWindow()
     {
         InitializeComponent();
+        InitializeEdgeExePath(); // 确保在构造函数中调用
         LoadSettings();
+    }
+
+    private void InitializeEdgeExePath()
+    {
+        // 首先尝试在应用程序目录中查找 edge.exe
+        edgeExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "edge.exe");
+        
+        // 如果在应用程序目录中找不到，则尝试在项目目录中查找（用于开发环境）
+        if (!File.Exists(edgeExePath))
+        {
+            string projectDir = Directory.GetCurrentDirectory();
+            edgeExePath = Path.Combine(projectDir, "edge.exe");
+        }
+
+        // 如果仍然找不到，使用默认值
+        if (!File.Exists(edgeExePath))
+        {
+            edgeExePath = "edge.exe";
+        }
     }
 
     private void LoadSettings()
@@ -97,7 +118,7 @@ public partial class MainWindow : Window
         }
 
         // 检查 edge.exe 是否存在
-        if (!File.Exists(edgeExePath))
+        if (string.IsNullOrEmpty(edgeExePath) || !File.Exists(edgeExePath))
         {
             MessageBox.Show("未找到 edge.exe 文件。请选择正确的文件位置。", "文件未找到", MessageBoxButton.OK, MessageBoxImage.Warning);
             OpenFileDialog openFileDialog = new OpenFileDialog
