@@ -3,19 +3,16 @@ name: N2NEdgeGUI CI/CD
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  release:
+    types: [created]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        configuration: [Debug, Release]
-
     runs-on: windows-latest
 
     env:
       Project_Path: EdgeGUI.csproj
+      Configuration: Release
 
     steps:
     - name: Checkout
@@ -32,13 +29,27 @@ jobs:
       run: dotnet restore ${{ env.Project_Path }}
 
     - name: Build
-      run: dotnet build ${{ env.Project_Path }} --configuration ${{ matrix.configuration }} --no-restore
+      run: dotnet build ${{ env.Project_Path }} --configuration ${{ env.Configuration }} --no-restore
 
     - name: Publish
-      run: dotnet publish ${{ env.Project_Path }} --configuration ${{ matrix.configuration }} --no-build --output ./publish
+      run: dotnet publish ${{ env.Project_Path }} --configuration ${{ env.Configuration }} --no-build --output ./publish
+
+    - name: Zip Release
+      run: Compress-Archive -Path ./publish/* -DestinationPath N2NEdgeGUI.zip
+
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./N2NEdgeGUI.zip
+        asset_name: N2NEdgeGUI.zip
+        asset_content_type: application/zip
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: N2NEdgeGUI-${{ matrix.configuration }}
-        path: ./publish
+        name: N2NEdgeGUI
+        path: ./N2NEdgeGUI.zip
