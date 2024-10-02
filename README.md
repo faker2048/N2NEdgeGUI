@@ -1,6 +1,8 @@
 # N2NEdgeGUI
 
-EdgeGUI 是一个用于管理和运行 edge.exe 的图形用户界面程序。
+EdgeGUI 是一个用于管理和运行 edge.exe 的图形用户界面程序。 
+
+![34ecb68b3e61a8bf0a54adb9eb5c3aae](https://github.com/user-attachments/assets/f682e8e6-0896-4e7c-8ac0-2021c574a63d)
 
 ## 开发环境
 
