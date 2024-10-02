@@ -1,0 +1,44 @@
+name: N2NEdgeGUI CI/CD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: windows-latest
+
+    env:
+      Project_Path: EdgeGUI.csproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.Project_Path }}
+
+    - name: Build
+      run: dotnet build ${{ env.Project_Path }} --configuration ${{ matrix.configuration }} --no-restore
+
+    - name: Publish
+      run: dotnet publish ${{ env.Project_Path }} --configuration ${{ matrix.configuration }} --no-build --output ./publish
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: N2NEdgeGUI-${{ matrix.configuration }}
+        path: ./publish
