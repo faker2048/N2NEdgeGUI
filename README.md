@@ -9,7 +9,7 @@
 - 使用了 GitHub Action 自动编译，省心省力，放心食用 🚀~
 
 
-![34ecb68b3e61a8bf0a54adb9eb5c3aae](https://github.com/user-attachments/assets/f682e8e6-0896-4e7c-8ac0-2021c574a63d)
+![6f8d6a16a3396fe0e002f8425d22ecd3](https://github.com/user-attachments/assets/178179c3-5c1a-40ab-bc6d-5f0fe304f447)
 
 ## 开发环境 🌐
 
