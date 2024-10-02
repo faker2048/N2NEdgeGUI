@@ -64,10 +64,10 @@ public partial class MainWindow : Window
                 var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
                 if (settings != null)
                 {
-                    NameTextBox.Text = settings.GetValueOrDefault("Name", "");
-                    KeyTextBox.Text = settings.GetValueOrDefault("Key", "");
-                    ServerTextBox.Text = settings.GetValueOrDefault("Server", "");
-                    LocalTextBox.Text = settings.GetValueOrDefault("Local", "");
+                    NameTextBox.Text = settings.GetValueOrDefault("Name", string.Empty);
+                    KeyTextBox.Text = settings.GetValueOrDefault("Key", string.Empty);
+                    ServerTextBox.Text = settings.GetValueOrDefault("Server", string.Empty);
+                    LocalTextBox.Text = settings.GetValueOrDefault("Local", string.Empty);
                     edgeExePath = settings.GetValueOrDefault("EdgeExePath", "edge.exe");
                 }
             }
@@ -83,11 +83,11 @@ public partial class MainWindow : Window
         string settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SettingsFileName);
         var settings = new Dictionary<string, string>
         {
-            { "Name", NameTextBox.Text },
-            { "Key", KeyTextBox.Text },
-            { "Server", ServerTextBox.Text },
-            { "Local", LocalTextBox.Text },
-            { "EdgeExePath", edgeExePath }
+            { "Name", NameTextBox.Text ?? string.Empty },
+            { "Key", KeyTextBox.Text ?? string.Empty },
+            { "Server", ServerTextBox.Text ?? string.Empty },
+            { "Local", LocalTextBox.Text ?? string.Empty },
+            { "EdgeExePath", edgeExePath ?? string.Empty }
         };
 
         try
